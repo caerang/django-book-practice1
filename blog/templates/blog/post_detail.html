@@ -3,11 +3,36 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block extra_head %}
-    <style>
-        .post_photo{
-            max_width: 100%;
-        }
-    </style>
+<style>
+    .post_photo {
+        max_width: 100%;
+    }
+    .post-map {
+        width: 300px;
+        height: 300px;
+    }
+</style>
+
+{% if post.lnglat %}
+<script>
+$(function() {
+    var lat = {{ post.lat }};
+    var lng = {{ post.lng }};
+    var myLatLng = {lat: lat, lng: lng};
+    var container = $('.post-map')[0];
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 4,
+        center:myLatLng
+    });
+    var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        title: 'Hello World!'
+    });
+});
+</script>
+{% endif %}
+<script src="https://maps.googleapis.com/maps/api/js"></script>
 {% endblock %}
 
 {% block content %}
@@ -24,10 +49,15 @@
                     {% endif %}
                     <hr />
 
+                    <div class="post-map">
+
+                    </div>
+
                     {{ post.content|linebreaks }}
                 </div>
                 <div class="panel-footer">
                     <a href="{% url 'blog:index' %}" class="btn btn-default">목록으로</a>
+                    <a href="{% url 'blog:comment_new' %}" class="btn btn-primary">댓글쓰기</a>
                 </div>
             </div>
         </div>
